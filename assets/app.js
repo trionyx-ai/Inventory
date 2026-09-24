@@ -1,6 +1,9 @@
 // ============================================================
 // 主控台共用邏輯：登入檢查（讀 localStorage）、分頁切換、登出、小工具
 // ============================================================
+// ============================================================
+// 主控台共用邏輯：登入檢查（讀 localStorage）、分頁切換、登出、小工具
+// ============================================================
 
 let currentUser = null;
 
@@ -15,7 +18,12 @@ if (!session) {
     delivererField.value = currentUser.displayName;
   }
   // 通知 inventory.js / handover.js 可以開始讀資料庫了
-  document.dispatchEvent(new CustomEvent('crate:auth-ready', { detail: { user: currentUser } }));
+  // （用 setTimeout 延後到下一輪，確保 inventory.js / handover.js 的
+  //  <script> 已經跑完、事件監聽已經掛上，不然這個通知會發生在
+  //  它們準備好之前，資料就永遠不會被讀出來）
+  setTimeout(() => {
+    document.dispatchEvent(new CustomEvent('crate:auth-ready', { detail: { user: currentUser } }));
+  }, 0);
 }
 
 document.getElementById('logout-btn').addEventListener('click', () => {
