@@ -46,6 +46,30 @@
         <button class="btn btn-amber" id="add-item-btn">＋ 新增品項</button>
       </div>
 
+      <div class="panel">
+        <div class="panel-head">
+          <h2>異動紀錄</h2>
+          <div class="mono" style="font-size:11.5px;color:var(--ink-soft)">最近 30 筆</div>
+        </div>
+        <div style="max-height:220px;overflow-y:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>時間</th>
+              <th>使用者</th>
+              <th>動作</th>
+              <th>品項</th>
+              <th>內容</th>
+            </tr>
+          </thead>
+          <tbody id="log-tbody"></tbody>
+        </table>
+        </div>
+        <div class="empty-state hidden" id="log-empty" style="padding:20px;">
+          <div>還沒有任何異動紀錄</div>
+        </div>
+      </div>
+
       <div class="stat-row">
         <div class="stat"><div class="n" id="stat-total-items">0</div><div class="l">品項數</div></div>
         <div class="stat"><div class="n" id="stat-total-qty">0</div><div class="l">總數量</div></div>
@@ -191,8 +215,12 @@
       <div class="modal-body">
         <input type="hidden" id="item-id">
         <div class="field">
-          <label for="item-name">品名 *</label>
+          <label for="item-name">品名（中文）*</label>
           <input type="text" id="item-name" required>
+        </div>
+        <div class="field">
+          <label for="item-name-en">英文品名（點交表列印用，選填）</label>
+          <input type="text" id="item-name-en" placeholder="e.g. HEPA Filter">
         </div>
         <div class="field-row">
           <div class="field">
@@ -206,19 +234,19 @@
         </div>
         <div class="field">
           <label for="item-location">存放位置 *</label>
-          <select id="item-location" required>
-            <option value="">請選擇位置</option>
-            <option value="Charlie Home">Charlie Home</option>
-            <option value="Sebastian Home">Sebastian Home</option>
-          </select>
+          <input type="text" id="item-location" list="location-options" required placeholder="選擇或輸入新位置">
+          <datalist id="location-options">
+            <option value="Charlie Home">
+            <option value="Sebastian Home">
+          </datalist>
         </div>
         <div class="field">
           <label for="item-category">分類（選填）</label>
-          <select id="item-category">
-            <option value="">請選擇分類</option>
-            <option value="消耗品">消耗品</option>
-            <option value="清潔用品">清潔用品</option>
-          </select>
+          <input type="text" id="item-category" list="category-options" placeholder="選擇或輸入新分類">
+          <datalist id="category-options">
+            <option value="消耗品">
+            <option value="清潔用品">
+          </datalist>
         </div>
         <div class="field">
           <label for="item-notes">備註（選填）</label>
