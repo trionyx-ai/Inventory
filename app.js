@@ -1,33 +1,29 @@
 // ============================================================
 // 主控台共用邏輯:登入驗證、分頁切換、登出、小工具
 // ============================================================
+// ============================================================
+// 主控台共用邏輯：登入檢查（讀 localStorage）、分頁切換、登出、小工具
+// ============================================================
 
 let currentUser = null;
 
-if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
-  alert('⚠️ 無法連線到 Firebase,請確認 assets/firebase-config.js 已填入正確設定,並檢查網路連線。即將返回登入頁。');
+const session = localStorage.getItem('crate_session');
+if (!session) {
   window.location.href = 'index.html';
-  throw new Error('Firebase 未就緒');
-}
-
-// 未登入就導回登入頁；已登入則記錄使用者資訊
-auth.onAuthStateChanged((user) => {
-  if (!user) {
-    window.location.href = 'index.html';
-    return;
-  }
-  currentUser = user;
-  document.getElementById('who-email').textContent = user.displayName || user.email;
+} else {
+  currentUser = JSON.parse(session);
+  document.getElementById('who-email').textContent = currentUser.displayName;
   const delivererField = document.getElementById('ho-deliverer');
   if (delivererField && !delivererField.value) {
-    delivererField.value = user.displayName || user.email;
+    delivererField.value = currentUser.displayName;
   }
-  // 使用者確認登入後才開始載入資料（inventory.js / handover.js 監聽這個事件）
-  document.dispatchEvent(new CustomEvent('crate:auth-ready', { detail: { user } }));
-});
+  // 通知 inventory.js / handover.js 可以開始讀資料庫了
+  document.dispatchEvent(new CustomEvent('crate:auth-ready', { detail: { user: currentUser } }));
+}
 
 document.getElementById('logout-btn').addEventListener('click', () => {
-  auth.signOut();
+  localStorage.removeItem('crate_session');
+  window.location.href = 'index.html';
 });
 
 // ---------- 分頁切換 ----------
