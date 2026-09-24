@@ -2,6 +2,10 @@
 // 點交表:挑選品項 → 產生可列印確認單 → 存紀錄 → （可選）扣庫存
 // ============================================================
 
+// ============================================================
+// 點交表:挑選品項 → 產生可列印確認單 → 存紀錄 → （可選）扣庫存
+// ============================================================
+
 let hoLineItems = []; // [{itemId, name, sku, location, qty}]
 let hoSearchTerm = '';
 
@@ -30,7 +34,7 @@ function renderPickList() {
   el.innerHTML = list.map((it) => `
     <div class="pick-row">
       <div class="info">
-        <b>${escapeHtml(it.name)}</b>
+        <b>${escapeHtml(it.name)}</b>${it.nameEn ? ` <span style="color:var(--ink-soft);">/ ${escapeHtml(it.nameEn)}</span>` : ''}
         <div class="meta">${escapeHtml(it.sku || '—')} · ${escapeHtml(it.location || '未指定')} · 庫存 ${escapeHtml(it.quantity)}</div>
       </div>
       <div style="display:flex;gap:6px;align-items:center;">
@@ -55,7 +59,7 @@ function addLineItem(itemId) {
   if (existing) {
     existing.qty += qty;
   } else {
-    hoLineItems.push({ itemId, name: it.name, sku: it.sku || '', location: it.location || '', qty });
+    hoLineItems.push({ itemId, name: it.name, nameEn: it.nameEn || '', sku: it.sku || '', location: it.location || '', qty });
   }
   renderLineItems();
 }
@@ -158,8 +162,7 @@ document.getElementById('ho-generate-btn').addEventListener('click', async () =>
 function renderSheet(record) {
   const rows = record.items.map((li) => `
     <tr>
-      <td><b>${escapeHtml(li.name)}</b>${li.sku ? ` <span style="color:#8C99A0;">(${escapeHtml(li.sku)})</span>` : ''}</td>
-      <td>${escapeHtml(li.location || '—')}</td>
+      <td><b>${escapeHtml(li.nameEn || li.name)}</b>${li.sku ? ` <span style="color:#8C99A0;">(${escapeHtml(li.sku)})</span>` : ''}</td>
       <td style="text-align:right;">${escapeHtml(li.qty)}</td>
     </tr>
   `).join('');
@@ -177,7 +180,7 @@ function renderSheet(record) {
         <div><span>品項數</span>${record.items.length} 項</div>
       </div>
       <table>
-        <thead><tr><th>品名</th><th>原存放位置</th><th style="text-align:right;">數量</th></tr></thead>
+        <thead><tr><th>品名</th><th style="text-align:right;">數量</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
       ${record.notes ? `<div class="sheet-notes"><b>備註：</b>${escapeHtml(record.notes)}</div>` : ''}
