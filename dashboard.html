@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>倉記 Crate — 庫存管理</title>
+<title>Trionyx 庫存管理</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
 <div class="mobile-topbar">
-  <div class="mark">倉<span>記</span></div>
+  <div class="mark">TRIONY<span>X</span></div>
   <button class="btn btn-ghost btn-sm" id="mobile-nav-toggle">選單</button>
 </div>
 
 <div class="app-shell" id="app-shell">
 
   <aside class="sidebar">
-    <div class="mark">倉<span>記</span> Crate</div>
+    <div class="mark">TRIONY<span>X</span></div>
     <nav>
       <button class="nav-btn active" data-view="inventory">
         庫存管理 <span class="tag">STOCK</span>
@@ -206,11 +206,19 @@
         </div>
         <div class="field">
           <label for="item-location">存放位置 *</label>
-          <input type="text" id="item-location" placeholder="例如:A 倉 3 排 2 層" required>
+          <select id="item-location" required>
+            <option value="">請選擇位置</option>
+            <option value="Charlie Home">Charlie Home</option>
+            <option value="Sebastian Home">Sebastian Home</option>
+          </select>
         </div>
         <div class="field">
           <label for="item-category">分類（選填）</label>
-          <input type="text" id="item-category" placeholder="例如:五金零件">
+          <select id="item-category">
+            <option value="">請選擇分類</option>
+            <option value="消耗品">消耗品</option>
+            <option value="清潔用品">清潔用品</option>
+          </select>
         </div>
         <div class="field">
           <label for="item-notes">備註（選填）</label>
