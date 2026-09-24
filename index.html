@@ -24,19 +24,13 @@
 
   <div class="auth-form-wrap">
     <div class="auth-card">
-      <div id="sdk-error-banner" class="field-error hidden" style="background:var(--bad-soft);color:var(--bad);padding:10px 12px;border-radius:var(--radius);margin-bottom:16px;font-size:13px;"></div>
-      <div class="auth-toggle">
-        <button id="tab-login" class="active" type="button">登入</button>
-        <button id="tab-signup" type="button">建立帳號</button>
-      </div>
+      <h2>歡迎回來</h2>
+      <div class="sub">請用團隊帳號登入</div>
 
-      <!-- 登入表單 -->
       <form id="login-form">
-        <h2>歡迎回來</h2>
-        <div class="sub">登入你的團隊帳號</div>
         <div class="field">
-          <label for="login-email">Email</label>
-          <input type="email" id="login-email" required autocomplete="email">
+          <label for="login-username">帳號</label>
+          <input type="text" id="login-username" required autocomplete="username">
         </div>
         <div class="field">
           <label for="login-password">密碼</label>
@@ -45,35 +39,12 @@
         <div class="field-error" id="login-error"></div>
         <button type="submit" class="btn btn-primary auth-submit" id="login-submit">登入</button>
       </form>
-
-      <!-- 註冊表單 -->
-      <form id="signup-form" class="hidden">
-        <h2>建立新帳號</h2>
-        <div class="sub">給團隊成員各自的登入身分</div>
-        <div class="field">
-          <label for="signup-name">姓名 / 顯示名稱</label>
-          <input type="text" id="signup-name" required autocomplete="name">
-        </div>
-        <div class="field">
-          <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" required autocomplete="email">
-        </div>
-        <div class="field">
-          <label for="signup-password">密碼</label>
-          <input type="password" id="signup-password" required minlength="6" autocomplete="new-password">
-          <div class="field-hint">至少 6 個字元</div>
-        </div>
-        <div class="field-error" id="signup-error"></div>
-        <button type="submit" class="btn btn-primary auth-submit" id="signup-submit">建立帳號並登入</button>
-      </form>
-
     </div>
   </div>
 
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="assets/firebase-config.js"></script>
 <script src="assets/auth.js"></script>
