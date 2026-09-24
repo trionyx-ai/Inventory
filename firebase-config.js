@@ -4,10 +4,9 @@
    → 往下捲到「你的應用程式」→ SDK 設定與程式碼
    把那邊的 firebaseConfig 物件整個貼過來取代下面這個即可
    ============================================================ */
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+/* ============================================================
+   Firebase 專案設定 — trionyx-ai
+   ============================================================ */
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXjTA8OXP7S7ZikGSMKeURtY5WA0BgJuI",
@@ -15,12 +14,9 @@ const firebaseConfig = {
   projectId: "trionyx-ai",
   storageBucket: "trionyx-ai.firebasestorage.app",
   messagingSenderId: "663915231308",
-  appId: "1:663915231308:web:6c613a81556ebd8f139ce9",
-  measurementId: "G-VCMYR0JE0B"
+  appId: "1:663915231308:web:6c613a81556ebd8f139ce9"
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
