@@ -7,6 +7,11 @@
 /* ============================================================
    Firebase 專案設定 — trionyx-ai
    ============================================================ */
+/* ============================================================
+   Firebase 專案設定 — trionyx-ai
+   （這裡只用 Firestore 存資料，不用 Firebase Authentication，
+   所以不需要在 Firebase Console 另外開啟「登入方式」）
+   ============================================================ */
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXjTA8OXP7S7ZikGSMKeURtY5WA0BgJuI",
@@ -18,5 +23,4 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 const db = firebase.firestore();
