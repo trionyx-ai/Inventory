@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>倉記 Crate — 登入</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="auth-shell">
+
+  <div class="auth-side">
+    <div class="mark">倉<span>記</span> Crate</div>
+    <div class="pitch">
+      <h1>東西在哪裡,一查就知道。</h1>
+      <p>團隊共用的庫存清冊,交貨給客戶時直接產生一張點交表,雙方簽名確認,不再靠記憶或對話紀錄。</p>
+      <div class="crate-tags">
+        <span>LOC-A1</span><span>LOC-B3</span><span>LOC-C2</span><span>QTY×12</span>
+      </div>
+    </div>
+    <div class="foot">庫存資料同步儲存於雲端,團隊成員登入後看到同一份清冊。</div>
+  </div>
+
+  <div class="auth-form-wrap">
+    <div class="auth-card">
+      <h2>歡迎回來</h2>
+      <div class="sub">請用團隊帳號登入</div>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="login-username">帳號</label>
+          <input type="text" id="login-username" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="login-password">密碼</label>
+          <input type="password" id="login-password" required autocomplete="current-password">
+        </div>
+        <div class="field-error" id="login-error"></div>
+        <button type="submit" class="btn btn-primary auth-submit" id="login-submit">登入</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/auth.js"></script>
+</body>
+</html>
