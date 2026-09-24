@@ -4,6 +4,12 @@
 
 let currentUser = null;
 
+if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
+  alert('⚠️ 無法連線到 Firebase,請確認 assets/firebase-config.js 已填入正確設定,並檢查網路連線。即將返回登入頁。');
+  window.location.href = 'index.html';
+  throw new Error('Firebase 未就緒');
+}
+
 // 未登入就導回登入頁；已登入則記錄使用者資訊
 auth.onAuthStateChanged((user) => {
   if (!user) {
