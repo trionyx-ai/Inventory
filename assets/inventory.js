@@ -1,9 +1,5 @@
 // ============================================================
 // 庫存管理:即時同步 Firestore 的 items collection
-// ============================================================
-
-// ============================================================
-// 庫存管理:即時同步 Firestore 的 items collection
 // 每次新增/編輯/刪除都會順便寫一筆到 itemLogs,給「異動紀錄」用
 // ============================================================
 
@@ -13,22 +9,20 @@ let inventorySearchTerm = '';
 const itemModal = document.getElementById('item-modal');
 const itemForm = document.getElementById('item-form');
 
-document.addEventListener('crate:auth-ready', () => {
-  db.collection('items').orderBy('name').onSnapshot((snap) => {
-    inventoryItems = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    renderInventoryTable();
-    document.dispatchEvent(new CustomEvent('crate:items-updated', { detail: { items: inventoryItems } }));
-  }, (err) => {
-    console.error(err);
-    showToast('讀取庫存資料失敗,請確認 Firebase 設定與 Firestore 規則');
-  });
+db.collection('items').orderBy('name').onSnapshot((snap) => {
+  inventoryItems = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  renderInventoryTable();
+  document.dispatchEvent(new CustomEvent('crate:items-updated', { detail: { items: inventoryItems } }));
+}, (err) => {
+  console.error(err);
+  showToast('讀取庫存資料失敗,請確認 Firebase 設定與 Firestore 規則');
+});
 
-  db.collection('itemLogs').orderBy('createdAt', 'desc').limit(30).onSnapshot((snap) => {
-    const logs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    renderLogTable(logs);
-  }, (err) => {
-    console.error(err);
-  });
+db.collection('itemLogs').orderBy('createdAt', 'desc').limit(30).onSnapshot((snap) => {
+  const logs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  renderLogTable(logs);
+}, (err) => {
+  console.error(err);
 });
 
 function renderInventoryTable() {
