@@ -25,13 +25,17 @@ db.collection('itemLogs').orderBy('createdAt', 'desc').limit(30).onSnapshot((sna
   console.error(err);
 });
 
-function renderInventoryTable() {
+function getFilteredInventory() {
   const term = inventorySearchTerm.trim().toLowerCase();
-  const filtered = inventoryItems.filter((it) => {
+  return inventoryItems.filter((it) => {
     if (!term) return true;
     return [it.name, it.nameEn, it.sku, it.location, it.category]
       .some((v) => (v || '').toLowerCase().includes(term));
   });
+}
+
+function renderInventoryTable() {
+  const filtered = getFilteredInventory();
 
   const tbody = document.getElementById('inventory-tbody');
   const emptyState = document.getElementById('inventory-empty');
@@ -82,6 +86,37 @@ document.getElementById('inventory-search').addEventListener('input', (e) => {
   inventorySearchTerm = e.target.value;
   renderInventoryTable();
 });
+
+// ---------- 匯出 Excel ----------
+document.getElementById('export-excel-btn').addEventListener('click', () => {
+  const filtered = getFilteredInventory();
+  if (filtered.length === 0) {
+    showToast('目前沒有可匯出的品項');
+    return;
+  }
+  const rows = filtered.map((it) => ({
+    '品名': it.name || '',
+    '英文品名': it.nameEn || '',
+    '編號': it.sku || '',
+    '數量': it.quantity ?? 0,
+    '存放位置': it.location || '',
+    '分類': it.category || '',
+    '備註': it.notes || '',
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{ wch: 20 }, { wch: 20 }, { wch: 12 }, { wch: 8 }, { wch: 16 }, { wch: 12 }, { wch: 24 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '庫存');
+  XLSX.writeFile(wb, `庫存清單_${todayISO()}.xlsx`);
+  showToast('已匯出 Excel');
+});
+
+// ---------- 異動紀錄 Modal 開關 ----------
+const logModal = document.getElementById('log-modal');
+document.getElementById('open-log-btn').addEventListener('click', () => logModal.classList.remove('hidden'));
+document.getElementById('log-modal-close').addEventListener('click', () => logModal.classList.add('hidden'));
+document.getElementById('log-modal-close-2').addEventListener('click', () => logModal.classList.add('hidden'));
+logModal.addEventListener('click', (e) => { if (e.target === logModal) logModal.classList.add('hidden'); });
 
 // ---------- 異動紀錄面板 ----------
 function renderLogTable(logs) {
