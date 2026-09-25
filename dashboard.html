@@ -119,11 +119,11 @@
         <div class="field-row">
           <div class="field">
             <label for="ho-customer">客戶 / 收件單位</label>
-            <input type="text" id="ho-customer" placeholder="例如:大同商行">
+            <input type="text" id="ho-customer">
           </div>
           <div class="field">
             <label for="ho-contact">聯絡人 / 電話（選填）</label>
-            <input type="text" id="ho-contact" placeholder="例如:王小姐 0912-345-678">
+            <input type="text" id="ho-contact">
           </div>
         </div>
         <div class="field-row">
@@ -259,6 +259,21 @@
         <button type="submit" class="btn btn-primary" id="item-save-btn">儲存</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ============ 點交紀錄明細（網站上看，含位置） ============ -->
+<div class="modal-overlay hidden" id="ho-detail-modal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head">
+      <h3>點交明細</h3>
+      <button class="close-x" id="ho-detail-close">✕</button>
+    </div>
+    <div class="modal-body" id="ho-detail-body"></div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" id="ho-detail-cancel">關閉</button>
+      <button type="button" class="btn btn-primary" id="ho-detail-print">列印點交表</button>
+    </div>
   </div>
 </div>
 
