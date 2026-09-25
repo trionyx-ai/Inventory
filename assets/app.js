@@ -1,8 +1,11 @@
 // ============================================================
 // 主控台共用邏輯：登入檢查（讀 localStorage）、分頁切換、登出、小工具
-// ============================================================
-// ============================================================
-// 主控台共用邏輯：登入檢查（讀 localStorage）、分頁切換、登出、小工具
+//
+// 注意：currentUser 在這裡用 let 宣告在最外層，dashboard.html 裡
+// 接下來載入的 inventory.js / handover.js 可以直接讀到這個變數 ——
+// 因為 <script src="..."> 標籤是照順序「完整執行完一個才會執行下一個」，
+// 不需要用事件或 setTimeout 去等，那樣反而在網路比較慢時會出現「有時候
+// 要重新整理才看得到資料」的問題。
 // ============================================================
 
 let currentUser = null;
@@ -17,13 +20,6 @@ if (!session) {
   if (delivererField && !delivererField.value) {
     delivererField.value = currentUser.displayName;
   }
-  // 通知 inventory.js / handover.js 可以開始讀資料庫了
-  // （用 setTimeout 延後到下一輪，確保 inventory.js / handover.js 的
-  //  <script> 已經跑完、事件監聽已經掛上，不然這個通知會發生在
-  //  它們準備好之前，資料就永遠不會被讀出來）
-  setTimeout(() => {
-    document.dispatchEvent(new CustomEvent('crate:auth-ready', { detail: { user: currentUser } }));
-  }, 0);
 }
 
 document.getElementById('logout-btn').addEventListener('click', () => {
