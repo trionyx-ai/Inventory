@@ -2,10 +2,6 @@
 // 點交表:挑選品項 → 產生可列印確認單 → 存紀錄 → （可選）扣庫存
 // ============================================================
 
-// ============================================================
-// 點交表:挑選品項 → 產生可列印確認單 → 存紀錄 → （可選）扣庫存
-// ============================================================
-
 let hoLineItems = []; // [{itemId, name, sku, location, qty}]
 let hoSearchTerm = '';
 
@@ -158,7 +154,7 @@ document.getElementById('ho-generate-btn').addEventListener('click', async () =>
   }
 });
 
-// ---------- 列印版面 ----------
+// ---------- 列印版面（全英文，客戶看的正式單據）----------
 function renderSheet(record) {
   const rows = record.items.map((li) => `
     <tr>
@@ -170,36 +166,34 @@ function renderSheet(record) {
   document.getElementById('sheet-render').innerHTML = `
     <div class="sheet">
       <div class="sheet-head">
-        <h1>物品點交確認單</h1>
-        <div class="doc-no">單號 ${escapeHtml(record.docNo)}<br>日期 ${escapeHtml(record.date)}</div>
+        <h1>Delivery Confirmation</h1>
+        <div class="doc-no">Doc No. ${escapeHtml(record.docNo)}<br>Date ${escapeHtml(record.date)}</div>
       </div>
       <div class="sheet-meta">
-        <div><span>客戶 / 收件單位</span>${escapeHtml(record.customer)}</div>
-        <div><span>聯絡人</span>${escapeHtml(record.contact || '—')}</div>
-        <div><span>交付人</span>${escapeHtml(record.deliverer || '—')}</div>
-        <div><span>品項數</span>${record.items.length} 項</div>
+        <div><span>Customer</span>${escapeHtml(record.customer)}</div>
+        <div><span>Contact</span>${escapeHtml(record.contact || '—')}</div>
+        <div><span>Delivered By</span>${escapeHtml(record.deliverer || '—')}</div>
+        <div><span>Items</span>${record.items.length}</div>
       </div>
       <table>
-        <thead><tr><th>品名</th><th style="text-align:right;">數量</th></tr></thead>
+        <thead><tr><th>Item</th><th style="text-align:right;">Qty</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
-      ${record.notes ? `<div class="sheet-notes"><b>備註：</b>${escapeHtml(record.notes)}</div>` : ''}
+      ${record.notes ? `<div class="sheet-notes"><b>Notes:</b> ${escapeHtml(record.notes)}</div>` : ''}
       <div class="sheet-sign">
-        <div class="line"><b>&nbsp;</b>交付人簽名</div>
-        <div class="line"><b>&nbsp;</b>收件人簽名</div>
+        <div class="line"><b>&nbsp;</b>Delivered By (Signature)</div>
+        <div class="line"><b>&nbsp;</b>Received By (Signature)</div>
       </div>
     </div>
   `;
 }
 
 // ---------- 歷史紀錄 ----------
-document.addEventListener('crate:auth-ready', () => {
-  db.collection('handovers').orderBy('createdAt', 'desc').onSnapshot((snap) => {
-    const records = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    renderHistory(records);
-  }, (err) => {
-    console.error(err);
-  });
+db.collection('handovers').orderBy('createdAt', 'desc').onSnapshot((snap) => {
+  const records = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  renderHistory(records);
+}, (err) => {
+  console.error(err);
 });
 
 function renderHistory(records) {
@@ -218,7 +212,7 @@ function renderHistory(records) {
       <td class="mono">${escapeHtml(r.date)}</td>
       <td class="num">${(r.items || []).length}</td>
       <td>${escapeHtml(r.deliverer || '—')}</td>
-      <td><button class="btn btn-ghost btn-sm" data-view="${r.id}">查看 / 列印</button></td>
+      <td><button class="btn btn-ghost btn-sm" data-view="${r.id}">查看明細</button></td>
     </tr>
   `).join('');
 
@@ -226,8 +220,53 @@ function renderHistory(records) {
     btn.addEventListener('click', () => {
       const r = records.find((x) => x.id === btn.dataset.view);
       if (!r) return;
-      renderSheet(r);
-      window.print();
+      openHoDetailModal(r);
     });
   });
 }
+
+// ---------- 點交明細（網站上看，含原存放位置）----------
+let hoDetailRecord = null;
+const hoDetailModal = document.getElementById('ho-detail-modal');
+
+function openHoDetailModal(record) {
+  hoDetailRecord = record;
+  const rows = (record.items || []).map((li) => `
+    <tr>
+      <td>
+        <b>${escapeHtml(li.name)}</b>
+        ${li.nameEn ? `<div style="font-size:11.5px;color:var(--ink-soft);">${escapeHtml(li.nameEn)}</div>` : ''}
+      </td>
+      <td><span class="loc-tag">${escapeHtml(li.location || '未指定')}</span></td>
+      <td class="num">${escapeHtml(li.qty)}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('ho-detail-body').innerHTML = `
+    <div class="sheet-meta" style="margin-bottom:16px;">
+      <div><span>客戶 / 收件單位</span>${escapeHtml(record.customer)}</div>
+      <div><span>聯絡人</span>${escapeHtml(record.contact || '—')}</div>
+      <div><span>日期</span>${escapeHtml(record.date)}</div>
+      <div><span>交付人</span>${escapeHtml(record.deliverer || '—')}</div>
+    </div>
+    <table>
+      <thead><tr><th>品名</th><th>原存放位置</th><th class="num">數量</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${record.notes ? `<div class="sheet-notes" style="margin-top:14px;"><b>備註：</b>${escapeHtml(record.notes)}</div>` : ''}
+  `;
+  hoDetailModal.classList.remove('hidden');
+}
+
+function closeHoDetailModal() {
+  hoDetailModal.classList.add('hidden');
+}
+
+document.getElementById('ho-detail-close').addEventListener('click', closeHoDetailModal);
+document.getElementById('ho-detail-cancel').addEventListener('click', closeHoDetailModal);
+hoDetailModal.addEventListener('click', (e) => { if (e.target === hoDetailModal) closeHoDetailModal(); });
+document.getElementById('ho-detail-print').addEventListener('click', () => {
+  if (!hoDetailRecord) return;
+  renderSheet(hoDetailRecord);
+  window.print();
+});
