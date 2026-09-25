@@ -3,6 +3,11 @@
    概念:倉庫貨架標籤 + 紙本點交清冊。功能性優先,
    數字與位置代碼用等寬字體排出「可掃描」的節奏感。
    ============================================================ */
+/* ============================================================
+   庫存管理系統 — 視覺系統
+   概念:倉庫貨架標籤 + 紙本點交清冊。功能性優先,
+   數字與位置代碼用等寬字體排出「可掃描」的節奏感。
+   ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -162,6 +167,18 @@ input, select, textarea {
   letter-spacing: .02em;
 }
 .auth-side .mark span { color: var(--amber); }
+.auth-side-image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.auth-side-image img {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+}
 .auth-side .pitch h1 {
   color: var(--paper);
   font-size: 34px;
